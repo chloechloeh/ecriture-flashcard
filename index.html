@@ -152,18 +152,16 @@
           </div>
 
           <div class="add-step" id="add-step-b">
-            <label class="step-label">2. 確認正面辨識文字（僅作為搜尋索引，不會顯示在卡片上）</label>
-            <input type="text" id="frontInput" style="margin-bottom: 24px; font-size: 18px; text-align: center;">
-
-            <label class="step-label">3. 在畫布上寫下反面內容（解釋/例句）</label>
+            <input type="hidden" id="frontInput">
+            <label class="step-label">2. 在畫布上寫下反面內容（解釋/例句）</label>
             <canvas id="drawingCanvasBack" style="height: 200px;"></canvas>
             <div style="display: flex; gap: 16px; margin-bottom: 24px;">
               <button class="btn-gray" id="clearBackCanvasBtn" style="flex: 1; padding: 12px; font-size: 16px;">清除重寫</button>
             </div>
 
-            <label class="step-label">4. 補充文字筆記（選填，純文字）</label>
+            <label class="step-label">3. 補充文字筆記（選填，純文字）</label>
             <textarea id="backInput" rows="3" style="margin-bottom: 24px; resize: none;"></textarea>
-            <label class="step-label">5. 選擇儲存牌組</label>
+            <label class="step-label">4. 選擇儲存牌組</label>
             <select id="deckSelect" style="margin-bottom: 40px;"></select>
             
             <div style="display: flex; gap: 16px; margin-top: auto;">

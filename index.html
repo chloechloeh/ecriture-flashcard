@@ -145,6 +145,12 @@
           <div class="add-step active" id="add-step-a">
             <label class="step-label">1. 在畫布上寫出單字</label>
             <canvas id="drawingCanvas"></canvas>
+            <label class="step-label">辨識語言</label>
+            <select id="ocrLang" style="margin-bottom: 16px;">
+              <option value="eng">英文 (English)</option>
+              <option value="chi_tra">中文繁體 (Chinese Traditional)</option>
+              <option value="jpn">日文 (Japanese)</option>
+            </select>
             <div style="display: flex; gap: 16px;">
               <button class="btn-gray" id="clearCanvasBtn" style="flex: 1; padding: 18px; font-size: 18px;">清除重寫</button>
               <button class="btn-blue" id="ocrBtn" style="flex: 2; padding: 18px; font-size: 18px;">🔍 辨識文字</button>
@@ -253,6 +259,7 @@
     }
 
     let currentOcrText = "";
+    let currentOcrLang = "eng";
     let currentViewDeck = "全部";
     // 用來儲存使用者在首頁手動建立的「空牌組」
     let customDecks = JSON.parse(localStorage.getItem('customDecks')) || [];
@@ -499,9 +506,10 @@
 
       try {
         const imageData = canvas.toDataURL('image/png');
-        const recognizedText = await recognizeTextFromImage(imageData, 'eng');
+        currentOcrLang = document.getElementById('ocrLang').value;
+        const recognizedText = await recognizeTextFromImage(imageData, currentOcrLang);
 
-        currentOcrText = recognizedText; 
+        currentOcrText = recognizedText;
         document.getElementById('frontInput').value = currentOcrText; 
         
         document.getElementById('add-step-a').classList.remove('active');
@@ -539,7 +547,7 @@
 
       let backOcrText = "";
       try {
-        backOcrText = await recognizeTextFromImage(backImage, 'eng');
+        backOcrText = await recognizeTextFromImage(backImage, currentOcrLang);
       } catch (error) {
         backOcrText = "";
       }
@@ -560,6 +568,7 @@
       document.getElementById('frontInput').value = '';
       document.getElementById('backInput').value = '';
       currentOcrText = "";
+      currentOcrLang = "eng";
       document.getElementById('add-step-b').classList.remove('active');
       document.getElementById('add-step-a').classList.add('active');
       ctx.clearRect(0, 0, canvas.width, canvas.height);

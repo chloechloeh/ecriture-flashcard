@@ -438,30 +438,32 @@
     document.getElementById('startReviewBtn').onclick = () => switchView('review', '複習模式');
 
     function setupCanvas(canvas, ctx) {
-      let isDrawing = false;
+      let activePointerId = null;
       function getPos(e) {
         const rect = canvas.getBoundingClientRect();
         return { x: e.clientX - rect.left, y: e.clientY - rect.top };
       }
       // 使用 Pointer Events，統一支援滑鼠、觸控與 Apple Pencil
+      // 只追蹤「第一個」按下的觸點，書寫時手掌誤觸的其他觸點會被忽略（基本手掌防誤觸）
       canvas.addEventListener('pointerdown', (e) => {
         e.preventDefault();
-        isDrawing = true;
+        if (activePointerId !== null) return; // 已經有一個觸點在畫，忽略其他觸點
+        activePointerId = e.pointerId;
         canvas.setPointerCapture(e.pointerId);
         ctx.beginPath();
         const p = getPos(e);
         ctx.moveTo(p.x, p.y);
       });
       canvas.addEventListener('pointermove', (e) => {
-        if (!isDrawing) return;
+        if (e.pointerId !== activePointerId) return;
         e.preventDefault();
         const p = getPos(e);
         ctx.lineTo(p.x, p.y);
         ctx.stroke();
       });
       const stopDrawing = (e) => {
-        if (!isDrawing) return;
-        isDrawing = false;
+        if (e.pointerId !== activePointerId) return;
+        activePointerId = null;
         try { canvas.releasePointerCapture(e.pointerId); } catch (err) {}
       };
       canvas.addEventListener('pointerup', stopDrawing);
